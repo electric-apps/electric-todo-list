@@ -55,14 +55,18 @@ export const FONT_THEMES: FontTheme[] = [
 interface ThemeContextValue {
 	currentTheme: FontTheme;
 	setTheme: (themeId: string) => void;
+	darkMode: boolean;
+	toggleDarkMode: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 const STORAGE_KEY = "font-theme";
+const DARK_MODE_KEY = "dark-mode";
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
 	const [currentTheme, setCurrentTheme] = useState<FontTheme>(FONT_THEMES[0]);
+	const [darkMode, setDarkMode] = useState(false);
 
 	useEffect(() => {
 		const saved = localStorage.getItem(STORAGE_KEY);
@@ -70,6 +74,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 			const theme = FONT_THEMES.find((t) => t.id === saved);
 			if (theme) setCurrentTheme(theme);
 		}
+		setDarkMode(localStorage.getItem(DARK_MODE_KEY) === "true");
 	}, []);
 
 	useEffect(() => {
@@ -91,8 +96,17 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 		}
 	};
 
+	const toggleDarkMode = () => {
+		setDarkMode((prev) => {
+			localStorage.setItem(DARK_MODE_KEY, String(!prev));
+			return !prev;
+		});
+	};
+
 	return (
-		<ThemeContext.Provider value={{ currentTheme, setTheme }}>
+		<ThemeContext.Provider
+			value={{ currentTheme, setTheme, darkMode, toggleDarkMode }}
+		>
 			{children}
 		</ThemeContext.Provider>
 	);

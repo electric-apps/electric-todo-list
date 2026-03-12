@@ -10,13 +10,13 @@ import sourceSerifCss from "@fontsource/source-serif-4/latin.css?url";
 import { Container, Flex, Heading, Text, Theme } from "@radix-ui/themes";
 import radixCss from "@radix-ui/themes/styles.css?url";
 import {
-	createRootRoute,
 	HeadContent,
 	Outlet,
 	Scripts,
+	createRootRoute,
 } from "@tanstack/react-router";
 import { Header } from "../components/Header";
-import { ThemeProvider } from "../contexts/ThemeContext";
+import { ThemeProvider, useTheme } from "../contexts/ThemeContext";
 import appCss from "../styles.css?url";
 
 export const Route = createRootRoute({
@@ -56,6 +56,22 @@ function NotFound() {
 	);
 }
 
+function ThemedApp() {
+	const { darkMode } = useTheme();
+	return (
+		<Theme
+			accentColor="violet"
+			grayColor="mauve"
+			radius="medium"
+			panelBackground="translucent"
+			appearance={darkMode ? "dark" : "light"}
+		>
+			<Header />
+			<Outlet />
+		</Theme>
+	);
+}
+
 function RootComponent() {
 	return (
 		<html lang="en">
@@ -63,17 +79,9 @@ function RootComponent() {
 				<HeadContent />
 			</head>
 			<body>
-				<Theme
-					accentColor="violet"
-					grayColor="mauve"
-					radius="medium"
-					panelBackground="translucent"
-				>
-					<ThemeProvider>
-						<Header />
-						<Outlet />
-					</ThemeProvider>
-				</Theme>
+				<ThemeProvider>
+					<ThemedApp />
+				</ThemeProvider>
 				<Scripts />
 			</body>
 		</html>
