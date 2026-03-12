@@ -1,0 +1,1 @@
+{"hooks":{"PreToolUse":[{"matcher":"AskUserQuestion","hooks":[{"type":"command","command":"/home/agent/workspace/create-a-todo-app-b3dd/.claude/hooks/forward.sh"}]}]}}
